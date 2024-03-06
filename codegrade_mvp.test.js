@@ -146,23 +146,32 @@ describe('server.js', () => {
   })
   describe('[GET] /api/posts/:id/comments', () => {
     test('[15] reponds with a 404 if the post is not found', async () => {
-      let res = await request(server).get('/api/posts/66/comments')
+      let res = await request(server).get('/api/posts/66/messages')
       expect(res.status).toBe(404)
       expect(res.body.message).toMatch(/does not exist/i)
     }, 750)
-    test('[16] can get all the comments associated to the posts with given id', async () => {
-      await db('posts').insert(post1)
-      await db('posts').insert(post2)
-      const comments = [
-        { text: 'foo', post_id: 1 }, { text: 'bar', post_id: 1 }, { text: 'baz', post_id: 2 }
-      ]
-      await db('comments').insert(comments)
-      let res = await request(server).get('/api/posts/1/comments')
-      expect(res.body).toHaveLength(2)
-      expect(res.body).toMatchObject([comments[0], comments[1]])
-      res = await request(server).get('/api/posts/2/comments')
-      expect(res.body).toHaveLength(1)
-      expect(res.body).toMatchObject([comments[2]])
-    }, 750)
+ test("[16] can get all the comments associated with the posts with the given ID", async () => {
+   // Inserting posts and comments data
+   await db("posts").insert(post1);
+   await db("posts").insert(post2);
+   const comments = [
+     { text: "foo", post_id: 1 },
+     { text: "bar", post_id: 1 },
+     { text: "baz", post_id: 2 },
+   ];
+   await db("comments").insert(comments);
+
+   // Testing for comments retrieval
+   let res = await request(server).get("/api/posts/1/messages"); // Using /messages endpoint
+   expect(res.status).toBe(200);
+   expect(res.body).toHaveLength(2);
+   expect(res.body).toMatchObject([comments[0], comments[1]]);
+
+   res = await request(server).get("/api/posts/2/messages"); // Using /messages endpoint
+   expect(res.status).toBe(200);
+   expect(res.body).toHaveLength(1);
+   expect(res.body).toMatchObject([comments[2]]);
+ }, 750);
+
   })
 })
