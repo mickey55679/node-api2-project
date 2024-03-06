@@ -109,7 +109,10 @@ router.put("/:id", (req, res) => {
            }
         })
         .then(post => {
-            res.json(post)
+            if(post){
+                res.json(post);
+            }
+        
         })
         .catch(err => {
             res.status(500).json({
