@@ -63,7 +63,18 @@ router.post('/', (req, res) => {
 
 }
 })
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
+    try{
+    
+
+    } catch(err) {
+        res.status(500).json({
+          message: "The post could not be removed",
+          err: err.message,
+          stack: err.stack,
+        });
+    }
+
 
 });
 router.put("/:id", (req, res) => {
